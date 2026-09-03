@@ -138,9 +138,9 @@ export default function GerencialForm() {
             ref_per_direccion: data.ref_per_direccion,
             ref_per_tel: data.ref_per_tel
           }),
-          cedula_frontal_url,
-          cedula_trasera_url,
-          firma_url,
+          cedula_frontal_url: cedulaFrontalB64 || cedula_frontal_url,
+          cedula_trasera_url: cedulaTraseraB64 || cedula_trasera_url,
+          firma_url: firmaDataUrl || firma_url,
         };
 
         const pdfBlob = await pdf(<PrestamoGerencialPDF data={pdfData} />).toBlob();

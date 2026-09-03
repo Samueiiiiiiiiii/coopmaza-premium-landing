@@ -168,9 +168,9 @@ export default function MipymesForm() {
             ref_telefono: data.ref_telefono,
             ref_tipo_empresa: data.ref_tipo_empresa,
           }),
-          cedula_frontal_url,
-          cedula_trasera_url,
-          firma_url,
+          cedula_frontal_url: cedulaFrontalB64 || cedula_frontal_url,
+          cedula_trasera_url: cedulaTraseraB64 || cedula_trasera_url,
+          firma_url: firmaDataUrl || firma_url,
         };
 
         const pdfBlob = await pdf(<PrestamoMipymesPDF data={pdfData} />).toBlob();

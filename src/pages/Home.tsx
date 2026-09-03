@@ -78,17 +78,19 @@ export default function Home() {
     try {
       setIsSubmitting(true);
       
+      let cedulaFrontalB64: string | null = null;
+      let cedulaTraseraB64: string | null = null;
       let cedula_frontal_url = null;
       let cedula_trasera_url = null;
       let firma_url = null;
 
       if (cedulaFrontal) {
-        const b64 = await fileToBase64(cedulaFrontal);
-        cedula_frontal_url = await uploadToB2Client(b64, cedulaFrontal.type, 'cedula-frontal');
+        cedulaFrontalB64 = await fileToBase64(cedulaFrontal);
+        cedula_frontal_url = await uploadToB2Client(cedulaFrontalB64, cedulaFrontal.type, 'cedula-frontal');
       }
       if (cedulaTrasera) {
-        const b64 = await fileToBase64(cedulaTrasera);
-        cedula_trasera_url = await uploadToB2Client(b64, cedulaTrasera.type, 'cedula-trasera');
+        cedulaTraseraB64 = await fileToBase64(cedulaTrasera);
+        cedula_trasera_url = await uploadToB2Client(cedulaTraseraB64, cedulaTrasera.type, 'cedula-trasera');
       }
       
       const signatureData = sigCanvas.current?.isEmpty() ? null : sigCanvas.current?.toDataURL();
@@ -124,9 +126,9 @@ export default function Home() {
           ocupacion_conyuge: data.ocupacionConyuge || null,
           salario_conyuge: data.salarioConyuge || null,
           fecha_nacimiento_conyuge: data.fechaNacimientoConyuge || null,
-          cedula_frontal_url,
-          cedula_trasera_url,
-          firma_url,
+          cedula_frontal_url: cedulaFrontalB64 || cedula_frontal_url,
+          cedula_trasera_url: cedulaTraseraB64 || cedula_trasera_url,
+          firma_url: signatureData || firma_url,
         };
 
         const pdfBlob = await pdf(<SolicitudPDF data={pdfData} />).toBlob();

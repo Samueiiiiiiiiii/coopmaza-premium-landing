@@ -246,13 +246,13 @@ export default function CorrienteForm() {
             gar_ingreso_mensual: data.gar_ingreso_mensual,
             gar_gastos_fijos: data.gar_gastos_fijos,
             gar_otros_ingresos: data.gar_otros_ingresos,
-            cedula_garante_frontal_url,
-            cedula_garante_trasera_url,
-            firma_garante_url
+            cedula_garante_frontal_url: cedulaGarFrontalB64 || cedula_garante_frontal_url,
+            cedula_garante_trasera_url: cedulaGarTraseraB64 || cedula_garante_trasera_url,
+            firma_garante_url: firmaGaranteDataUrl || firma_garante_url
           }),
-          cedula_frontal_url,
-          cedula_trasera_url,
-          firma_url,
+          cedula_frontal_url: cedulaFrontalB64 || cedula_frontal_url,
+          cedula_trasera_url: cedulaTraseraB64 || cedula_trasera_url,
+          firma_url: firmaDataUrl || firma_url,
         };
 
         const pdfBlob = await pdf(<PrestamoCorrientePDF data={pdfData} />).toBlob();

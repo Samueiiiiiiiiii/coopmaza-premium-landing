@@ -98,26 +98,48 @@ export default function SolicitudDetail() {
       // Pre-fetch images as blobs to prevent @react-pdf/renderer from hanging
       let firmaObjUrl, frontalObjUrl, traseraObjUrl;
       
-      const fetchAsObjectUrl = async (url?: string) => {
+      const fetchAsDataUrl = async (url?: string) => {
         if (!url) return undefined;
         try {
           const res = await fetch(url);
           if (!res.ok) throw new Error('Failed to fetch image');
           const blob = await res.blob();
-          return URL.createObjectURL(blob);
+          return new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result as string);
+            reader.readAsDataURL(blob);
+          });
         } catch (e) {
           console.error("Error pre-fetching image:", e);
           return undefined;
         }
       };
 
-      firmaObjUrl = await fetchAsObjectUrl(signedUrls.firma);
-      frontalObjUrl = await fetchAsObjectUrl(signedUrls.frontal);
-      traseraObjUrl = await fetchAsObjectUrl(signedUrls.trasera);
+      firmaObjUrl = await fetchAsDataUrl(signedUrls.firma);
+      frontalObjUrl = await fetchAsDataUrl(signedUrls.frontal);
+      traseraObjUrl = await fetchAsDataUrl(signedUrls.trasera);
+      const garFirmaObjUrl = await fetchAsDataUrl(signedUrls.gar_firma);
+      const garFrontalObjUrl = await fetchAsDataUrl(signedUrls.gar_frontal);
+      const garTraseraObjUrl = await fetchAsDataUrl(signedUrls.gar_trasera);
+
+      let dependientesParsed: any = {};
+      try {
+        dependientesParsed = typeof data.dependientes === 'string' ? JSON.parse(data.dependientes || '{}') : (data.dependientes || {});
+      } catch (e) {}
+
+      if (garFirmaObjUrl || garFrontalObjUrl || garTraseraObjUrl) {
+        dependientesParsed = {
+          ...dependientesParsed,
+          ...(garFirmaObjUrl ? { firma_garante_url: garFirmaObjUrl } : {}),
+          ...(garFrontalObjUrl ? { cedula_garante_frontal_url: garFrontalObjUrl } : {}),
+          ...(garTraseraObjUrl ? { cedula_garante_trasera_url: garTraseraObjUrl } : {}),
+        };
+      }
 
       // 1. Generate PDF blob client-side using react-pdf
       const pdfData = {
         ...data,
+        dependientes: typeof data.dependientes === 'string' ? JSON.stringify(dependientesParsed) : dependientesParsed,
         firma_url: firmaObjUrl || data.firma_url,
         cedula_frontal_url: frontalObjUrl || data.cedula_frontal_url,
         cedula_trasera_url: traseraObjUrl || data.cedula_trasera_url
@@ -138,11 +160,6 @@ export default function SolicitudDetail() {
         : <SolicitudPDF data={pdfData} />;
         
       const blob = await pdf(pdfComponent).toBlob();
-      
-      // Cleanup object URLs
-      if (firmaObjUrl) URL.revokeObjectURL(firmaObjUrl);
-      if (frontalObjUrl) URL.revokeObjectURL(frontalObjUrl);
-      if (traseraObjUrl) URL.revokeObjectURL(traseraObjUrl);
       
       // 2. Convert Blob to Base64
       const reader = new FileReader();
