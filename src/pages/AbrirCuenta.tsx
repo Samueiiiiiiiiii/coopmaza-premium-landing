@@ -24,7 +24,7 @@ export default function AbrirCuenta() {
         <div className="container mx-auto px-4 max-w-4xl relative z-10">
           {/* Back Link */}
           <Link
-            to="/"
+            to="/digital"
             className="inline-flex items-center text-brand-200 hover:text-white text-sm font-medium mb-5 transition-colors group"
           >
             <ArrowLeft className="w-4 h-4 mr-1.5 transform group-hover:-translate-x-0.5 transition-transform" />

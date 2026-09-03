@@ -6,7 +6,7 @@ function LoanCard({ loan }: { loan: LoanType }) {
   const Icon = loan.icon;
   return (
     <Link
-      to="/prestamos/$tipo"
+      to="/digital/prestamos/$tipo"
       params={{ tipo: loan.id } as any}
       className="group bg-white rounded-2xl shadow-md shadow-brand-900/5 border border-brand-100/50 p-6 md:p-8 text-center hover:-translate-y-1.5 hover:shadow-xl hover:border-brand-200 transition-all duration-300 flex flex-col items-center"
     >
@@ -44,7 +44,7 @@ export default function Prestamos() {
         <div className="container mx-auto px-4 max-w-5xl relative z-10">
           {/* Back Link */}
           <Link
-            to="/"
+            to="/digital"
             className="inline-flex items-center text-brand-200 hover:text-white text-sm font-medium mb-5 transition-colors group"
           >
             <ArrowLeft className="w-4 h-4 mr-1.5 transform group-hover:-translate-x-0.5 transition-transform" />
@@ -116,7 +116,7 @@ export default function Prestamos() {
         {/* Bottom Back Link */}
         <div className="text-center mt-10">
           <Link
-            to="/"
+            to="/digital"
             className="inline-flex items-center gap-2 text-brand-600 hover:text-brand-800 font-semibold text-sm transition-colors border border-brand-200 hover:border-brand-300 rounded-xl px-5 py-2.5 bg-white hover:bg-brand-50 shadow-sm"
           >
             <ArrowLeft className="w-4 h-4" />

@@ -225,7 +225,7 @@ export default function Dashboard() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-2">
-                        <Link to="/admin/solicitudes/$id" params={{ id: s.id } as any}>
+                        <Link to="/digital/admin/solicitudes/$id" params={{ id: s.id } as any}>
                           <Button variant="outline" size="sm" className="h-8 px-2 text-gray-600 hover:text-brand-600 hover:border-brand-600">
                             <Eye className="w-4 h-4" />
                           </Button>

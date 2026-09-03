@@ -262,7 +262,7 @@ export default function VehiculosForm() {
         <p className="text-gray-600 mb-8 text-lg">
           Su solicitud de Préstamo de Vehículos ha sido enviada exitosamente. Nuestro equipo la revisará y le contactará pronto.
         </p>
-        <Link to="/prestamos">
+        <Link to="/digital/prestamos">
           <Button size="lg" className="px-8 font-bold text-base h-14 bg-brand-700 hover:bg-brand-800 text-white rounded-xl shadow-lg">
             Volver a Préstamos
           </Button>

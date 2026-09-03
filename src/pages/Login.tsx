@@ -23,7 +23,7 @@ export default function Login() {
     await new Promise(r => setTimeout(r, 600));
 
     if (login(password)) {
-      navigate({ to: '/admin' });
+      navigate({ to: '/digital/admin' });
     } else {
       setError('Contraseña incorrecta');
       setIsLoading(false);
@@ -73,7 +73,7 @@ export default function Login() {
         </form>
 
         <div className="mt-8 text-center border-t border-gray-100 pt-6">
-          <Link to="/" className="inline-flex items-center text-sm text-brand-600 hover:text-brand-800 transition-colors font-medium">
+          <Link to="/digital" className="inline-flex items-center text-sm text-brand-600 hover:text-brand-800 transition-colors font-medium">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Volver al formulario público
           </Link>

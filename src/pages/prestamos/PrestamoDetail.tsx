@@ -17,7 +17,7 @@ export default function PrestamoDetail() {
       <div className="animate-fade-in-up">
         <section className="bg-gradient-to-br from-brand-900 via-brand-800 to-brand-700 text-white pt-8 pb-20 relative overflow-hidden">
           <div className="container mx-auto px-4 max-w-5xl relative z-10">
-            <Link to="/prestamos" className="inline-flex items-center text-brand-200 hover:text-white text-sm font-medium mb-5 transition-colors">
+            <Link to="/digital/prestamos" className="inline-flex items-center text-brand-200 hover:text-white text-sm font-medium mb-5 transition-colors">
               <ArrowLeft className="w-4 h-4 mr-1.5" /> Volver a préstamos
             </Link>
             <h1 className="text-3xl font-black">Tipo de préstamo no encontrado</h1>
@@ -48,7 +48,7 @@ export default function PrestamoDetail() {
 
         <div className="container mx-auto px-4 max-w-5xl relative z-10">
           <Link
-            to="/prestamos"
+            to="/digital/prestamos"
             className="inline-flex items-center text-brand-200 hover:text-white text-sm font-medium mb-5 transition-colors group"
           >
             <ArrowLeft className="w-4 h-4 mr-1.5 transform group-hover:-translate-x-0.5 transition-transform" />
@@ -138,7 +138,7 @@ export default function PrestamoDetail() {
             </div>
 
             <Link
-              to="/prestamos"
+              to="/digital/prestamos"
               className="inline-flex items-center gap-2 text-brand-600 hover:text-brand-800 font-semibold text-sm transition-colors border border-brand-200 hover:border-brand-300 rounded-xl px-5 py-2.5 bg-white hover:bg-brand-50 shadow-sm"
             >
               <ArrowLeft className="w-4 h-4" />

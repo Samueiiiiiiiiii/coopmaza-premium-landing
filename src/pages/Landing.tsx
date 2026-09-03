@@ -114,7 +114,7 @@ export default function Landing() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Card: Solicitar Préstamo */}
           <Link
-            to="/prestamos"
+            to="/digital/prestamos"
             className="group bg-white rounded-2xl shadow-lg shadow-brand-900/5 border border-brand-100/50 p-8 md:p-10 text-center hover:-translate-y-1.5 hover:shadow-xl hover:border-brand-200 transition-all duration-300 flex flex-col items-center"
           >
             <div className="w-20 h-20 bg-brand-100 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-brand-200 group-hover:scale-105 transition-all duration-300">
@@ -132,7 +132,7 @@ export default function Landing() {
 
           {/* Card: Abrir Cuenta */}
           <Link
-            to="/abrir-cuenta"
+            to="/digital/abrir-cuenta"
             className="group bg-white rounded-2xl shadow-lg shadow-brand-900/5 border border-brand-100/50 p-8 md:p-10 text-center hover:-translate-y-1.5 hover:shadow-xl hover:border-brand-200 transition-all duration-300 flex flex-col items-center"
           >
             <div className="w-20 h-20 bg-brand-100 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-brand-200 group-hover:scale-105 transition-all duration-300">

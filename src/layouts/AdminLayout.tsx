@@ -12,7 +12,7 @@ export function AdminLayout() {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate({ to: '/login', replace: true });
+      navigate({ to: '/digital/login', replace: true });
     }
   }, [isAuthenticated, navigate]);
 
@@ -32,20 +32,20 @@ export function AdminLayout() {
         
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
           <Link 
-            to="/admin" 
+            to="/digital/admin" 
             className={cn(
               "flex items-center px-4 py-3 rounded-lg transition-colors font-medium text-sm",
-              location.pathname === '/admin' ? "bg-brand-800 text-white" : "text-brand-200 hover:bg-brand-800/50 hover:text-white"
+              location.pathname === '/digital/admin' ? "bg-brand-800 text-white" : "text-brand-200 hover:bg-brand-800/50 hover:text-white"
             )}
           >
             <LayoutDashboard className="w-5 h-5 mr-3" />
             Dashboard
           </Link>
           <Link 
-            to="/admin/solicitudes" 
+            to="/digital/admin/solicitudes" 
             className={cn(
               "flex items-center px-4 py-3 rounded-lg transition-colors font-medium text-sm",
-              location.pathname.startsWith('/admin/solicitudes') ? "bg-brand-800 text-white" : "text-brand-200 hover:bg-brand-800/50 hover:text-white"
+              location.pathname.startsWith('/digital/admin/solicitudes') ? "bg-brand-800 text-white" : "text-brand-200 hover:bg-brand-800/50 hover:text-white"
             )}
           >
             <Users className="w-5 h-5 mr-3" />
@@ -57,7 +57,7 @@ export function AdminLayout() {
           <button 
             onClick={() => {
               logout();
-              navigate({ to: '/login' });
+              navigate({ to: '/digital/login' });
             }}
             className="flex items-center w-full px-4 py-3 text-sm font-medium text-red-300 hover:text-white hover:bg-red-500/20 rounded-lg transition-colors"
           >

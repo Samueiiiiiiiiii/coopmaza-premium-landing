@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MessageSquare, Shield, Zap, ArrowRight, Lock, Send, User, Mail, Phone, ChevronDown } from "lucide-react";
+import { MessageSquare, Shield, Zap, ArrowRight, Lock, User, ChevronDown } from "lucide-react";
 
 const features = [
   { icon: User, title: "Atención personalizada", desc: "Te acompañamos en todo lo que necesites." },

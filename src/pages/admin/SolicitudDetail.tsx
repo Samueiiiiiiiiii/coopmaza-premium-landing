@@ -232,7 +232,7 @@ export default function SolicitudDetail() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
         <div className="flex items-center gap-4">
-          <Link to="/admin">
+          <Link to="/digital/admin">
             <Button variant="outline" className="h-10 px-3"><ArrowLeft className="w-4 h-4 mr-2"/> Volver</Button>
           </Link>
           <div>

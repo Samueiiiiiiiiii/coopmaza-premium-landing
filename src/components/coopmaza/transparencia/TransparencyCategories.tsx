@@ -6,11 +6,7 @@ import {
   X,
   Download,
   FileText,
-  Calendar,
-  ExternalLink,
-  ShieldCheck,
-  Users,
-  Scale
+  Calendar
 } from "lucide-react";
 
 const categories = [

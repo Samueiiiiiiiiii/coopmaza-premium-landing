@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { ShieldCheck, ArrowRight, Leaf } from "lucide-react";
+import { ShieldCheck, ArrowRight } from "lucide-react";
 import { MagneticButton } from "../MagneticButton";
 
 export function TransparencyHero() {

@@ -8,7 +8,7 @@ export function PublicLayout() {
       {/* Header */}
       <header className="bg-white border-b border-gray-100 py-2 shadow-xs relative z-40">
         <div className="container mx-auto px-4 max-w-5xl flex items-center justify-between">
-          <Link to="/" className="flex items-center">
+          <Link to="/digital" className="flex items-center">
             <img src={logo} alt="Coopmaza Digital Logo" className="h-16 md:h-24 w-auto object-contain" />
           </Link>
 
