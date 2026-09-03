@@ -15,19 +15,21 @@ import { Section } from '../../../components/ui/Section';
 import { supabase } from '../../../lib/supabase';
 import { sendLoanNotification } from '../../../lib/utils';
 import { AwsClient } from 'aws4fetch';
+import { pdf } from '@react-pdf/renderer';
+import { PrestamoVehiculoPDF } from '../../../components/pdf/PrestamoVehiculoPDF';
 
 // Upload function directly from client to Backblaze
 const uploadToB2Client = async (fileBase64: string, contentType: string, fileName: string) => {
   if (!fileBase64) return null;
   
   const aws = new AwsClient({
-    accessKeyId: import.meta.env.VITE_BACKBLAZE_KEY_ID || import.meta.env.BACKBLAZE_KEY_ID || '00576daad65b0f30000000001',
-    secretAccessKey: import.meta.env.VITE_BACKBLAZE_APP_KEY || import.meta.env.BACKBLAZE_APP_KEY || 'K005/U/val4RsxoeunxbDA7kSCX8F2k',
+    accessKeyId: import.meta.env.VITE_BACKBLAZE_KEY_ID || import.meta.env.BACKBLAZE_KEY_ID || '005683eb57bbbfd0000000001',
+    secretAccessKey: import.meta.env.VITE_BACKBLAZE_APP_KEY || import.meta.env.BACKBLAZE_APP_KEY || 'K005iM2QhB29rWWGdDn317kZQh69GiQ',
     service: "s3",
     region: "us-east-005"
   });
 
-  const bucket = import.meta.env.VITE_BACKBLAZE_BUCKET || import.meta.env.BACKBLAZE_BUCKET || 'coopmaza-documentos';
+  const bucket = import.meta.env.VITE_BACKBLAZE_BUCKET || import.meta.env.BACKBLAZE_BUCKET || 'coopmaza-docs';
   const endpoint = import.meta.env.VITE_BACKBLAZE_ENDPOINT || import.meta.env.BACKBLAZE_ENDPOINT || 's3.us-east-005.backblazeb2.com'; 
   
   const key = `solicitudes/${crypto.randomUUID()}-${fileName}`;
@@ -150,6 +152,49 @@ export default function VehiculosForm() {
       const cedula_trasera_url = await uploadToB2Client(cedulaTraseraB64, cedulaTraseraFile.type, 'cedula-trasera');
       const firma_url = await uploadToB2Client(firmaDataUrl, 'image/png', 'firma.png');
 
+      let pdf_url = null;
+      try {
+        const pdfData = {
+          nombres: data.nombres_apellidos,
+          apellidos: data.apodo || 'N/A', 
+          cedula: data.cedula,
+          fecha_solicitud: currentDate.toISOString().split('T')[0],
+          estado_civil: data.estado_civil,
+          sexo: data.sexo,
+          direccion: data.direccion,
+          telefonos: data.telefono,
+          cargo: 'PRESTAMO_VEHICULOS',
+          dependientes: JSON.stringify({
+            nacionalidad: data.nacionalidad,
+            numero_cuenta: data.numero_cuenta,
+            monto_letras: data.monto_letras,
+            monto_prestamo: data.monto_prestamo,
+            plazo_prestamo: data.plazo_prestamo,
+            forma_pago: data.forma_pago,
+            cantidad_acciones: data.cantidad_acciones,
+            numero_cotizacion: data.numero_cotizacion,
+            articulo_seleccionado: data.articulo_seleccionado,
+            ref_per_nombres: data.ref_per_nombres,
+            ref_per_apodo: data.ref_per_apodo,
+            ref_per_direccion: data.ref_per_direccion,
+            ref_per_tel: data.ref_per_tel
+          }),
+          cedula_frontal_url,
+          cedula_trasera_url,
+          firma_url,
+        };
+
+        const pdfBlob = await pdf(<PrestamoVehiculoPDF data={pdfData} />).toBlob();
+        const reader = new FileReader();
+        const base64Pdf = await new Promise<string>((resolve) => {
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.readAsDataURL(pdfBlob);
+        });
+        pdf_url = await uploadToB2Client(base64Pdf, 'application/pdf', `solicitud-vehiculo-${data.cedula}.pdf`);
+      } catch (pdfErr) {
+        console.error('Error generando PDF en solicitud vehiculo:', pdfErr);
+      }
+
       const { error: dbError } = await supabase.from('solicitudes').insert({
         nombres: data.nombres_apellidos,
         apellidos: data.apodo || 'N/A', 
@@ -181,6 +226,7 @@ export default function VehiculosForm() {
         cedula_frontal_url,
         cedula_trasera_url,
         firma_url,
+        pdf_url,
       });
 
       if (dbError) throw new Error(dbError.message);

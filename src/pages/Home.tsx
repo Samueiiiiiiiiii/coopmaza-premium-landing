@@ -12,19 +12,21 @@ import { Upload, X, CheckCircle2, Send } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { supabase } from '../lib/supabase';
 import { AwsClient } from 'aws4fetch';
+import { pdf } from '@react-pdf/renderer';
+import { SolicitudPDF } from '../components/pdf/SolicitudPDF';
 
 // Upload function directly from client to Backblaze
 const uploadToB2Client = async (fileBase64: string, contentType: string, fileName: string) => {
   if (!fileBase64) return null;
   
   const aws = new AwsClient({
-    accessKeyId: import.meta.env.VITE_BACKBLAZE_KEY_ID || import.meta.env.BACKBLAZE_KEY_ID || '00576daad65b0f30000000001',
-    secretAccessKey: import.meta.env.VITE_BACKBLAZE_APP_KEY || import.meta.env.BACKBLAZE_APP_KEY || 'K005/U/val4RsxoeunxbDA7kSCX8F2k',
+    accessKeyId: import.meta.env.VITE_BACKBLAZE_KEY_ID || import.meta.env.BACKBLAZE_KEY_ID || '005683eb57bbbfd0000000001',
+    secretAccessKey: import.meta.env.VITE_BACKBLAZE_APP_KEY || import.meta.env.BACKBLAZE_APP_KEY || 'K005iM2QhB29rWWGdDn317kZQh69GiQ',
     service: "s3",
     region: "us-east-005"
   });
 
-  const bucket = import.meta.env.VITE_BACKBLAZE_BUCKET || import.meta.env.BACKBLAZE_BUCKET || 'coopmaza-documentos';
+  const bucket = import.meta.env.VITE_BACKBLAZE_BUCKET || import.meta.env.BACKBLAZE_BUCKET || 'coopmaza-docs';
   const endpoint = import.meta.env.VITE_BACKBLAZE_ENDPOINT || import.meta.env.BACKBLAZE_ENDPOINT || 's3.us-east-005.backblazeb2.com'; 
   
   const key = `solicitudes/${crypto.randomUUID()}-${fileName}`;
@@ -134,6 +136,50 @@ export default function Home() {
         firma_url = await uploadToB2Client(signatureData, 'image/png', 'firma.png');
       }
 
+      let pdf_url = null;
+      try {
+        const pdfData = {
+          fecha_solicitud: getLocalDateString(),
+          nombres: data.nombres,
+          apellidos: data.apellidos,
+          cedula: data.cedula,
+          fecha_nacimiento: data.fechaNacimiento || null,
+          estado_civil: data.estadoCivil || null,
+          sexo: data.sexo || null,
+          direccion: data.direccion || null,
+          ciudad: data.ciudad || null,
+          provincia: data.provincia || null,
+          telefonos: data.telefonos || null,
+          email: data.email || null,
+          dependientes: data.dependientes || null,
+          empresa: data.empresa || null,
+          codigo_empleado: data.codigoEmpleado || null,
+          direccion_empresa: data.direccionEmpresa || null,
+          departamento: data.departamento || null,
+          cargo: data.cargo || null,
+          salario: data.salario || null,
+          fecha_ingreso: data.fechaIngreso || null,
+          aporte_mensual: data.aporteMensual || null,
+          conyuge: data.conyuge || null,
+          ocupacion_conyuge: data.ocupacionConyuge || null,
+          salario_conyuge: data.salarioConyuge || null,
+          fecha_nacimiento_conyuge: data.fechaNacimientoConyuge || null,
+          cedula_frontal_url,
+          cedula_trasera_url,
+          firma_url,
+        };
+
+        const pdfBlob = await pdf(<SolicitudPDF data={pdfData} />).toBlob();
+        const reader = new FileReader();
+        const base64Pdf = await new Promise<string>((resolve) => {
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.readAsDataURL(pdfBlob);
+        });
+        pdf_url = await uploadToB2Client(base64Pdf, 'application/pdf', `solicitud-${data.cedula}.pdf`);
+      } catch (pdfErr) {
+        console.error('Error generando PDF automático:', pdfErr);
+      }
+
       const { error } = await supabase.from('solicitudes').insert({
         fecha_solicitud: getLocalDateString(),
         nombres: data.nombres,
@@ -163,6 +209,7 @@ export default function Home() {
         cedula_frontal_url,
         cedula_trasera_url,
         firma_url,
+        pdf_url,
       });
 
       if (error) throw new Error(error.message);

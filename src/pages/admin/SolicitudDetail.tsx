@@ -25,14 +25,14 @@ const uploadToB2Client = async (fileBase64: string, contentType: string, fileNam
   if (!fileBase64) return null;
   
   const aws = new AwsClient({
-    accessKeyId: '00576daad65b0f30000000001',
-    secretAccessKey: 'K005/U/val4RsxoeunxbDA7kSCX8F2k',
+    accessKeyId: import.meta.env.VITE_BACKBLAZE_KEY_ID || import.meta.env.BACKBLAZE_KEY_ID || '005683eb57bbbfd0000000001',
+    secretAccessKey: import.meta.env.VITE_BACKBLAZE_APP_KEY || import.meta.env.BACKBLAZE_APP_KEY || 'K005iM2QhB29rWWGdDn317kZQh69GiQ',
     service: "s3",
     region: "us-east-005"
   });
 
-  const bucket = 'coopmaza-documentos';
-  const endpoint = 's3.us-east-005.backblazeb2.com';
+  const bucket = import.meta.env.VITE_BACKBLAZE_BUCKET || import.meta.env.BACKBLAZE_BUCKET || 'coopmaza-docs';
+  const endpoint = import.meta.env.VITE_BACKBLAZE_ENDPOINT || import.meta.env.BACKBLAZE_ENDPOINT || 's3.us-east-005.backblazeb2.com';
   
   const key = `solicitudes/${crypto.randomUUID()}-${fileName}`;
   const url = `https://${bucket}.${endpoint}/${key}`;

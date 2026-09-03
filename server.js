@@ -22,7 +22,7 @@ app.use(
     on: {
       proxyReq: (proxyReq) => {
         // Usa la clave de entorno si existe, sino usa la tuya
-        const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || 'sb_secret_DQsWdev6KYsnSdTbEGK1xw_cJOkkgqk';
+        const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjYWpjbnBybHZibnFlbGFtcW5qIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTEwMjg1MiwiZXhwIjoyMDk0Njc4ODUyfQ.G5i9XcC-_kE203rFM3_yXbqWKkCpB5WR4oqzZdNWr68';
         proxyReq.setHeader('apikey', supabaseKey);
         proxyReq.setHeader('Authorization', `Bearer ${supabaseKey}`);
         
@@ -43,7 +43,7 @@ app.use(
 app.use(
   '/api/b2',
   createProxyMiddleware({
-    target: 'https://coopmaza-documentos.s3.us-east-005.backblazeb2.com',
+    target: 'https://coopmaza-docs.s3.us-east-005.backblazeb2.com',
     changeOrigin: true,
     pathRewrite: { '^/api/b2': '' },
   })

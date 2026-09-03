@@ -40,7 +40,9 @@ export default async function handler(req, res) {
       }
     }
     const qs = params.toString();
-    const targetUrl = `https://coopmaza-documentos.s3.us-east-005.backblazeb2.com/${proxyPath}${qs ? '?' + qs : ''}`;
+    const bucketName = process.env.BACKBLAZE_BUCKET || 'coopmaza-docs';
+    const endpoint = process.env.BACKBLAZE_ENDPOINT || 's3.us-east-005.backblazeb2.com';
+    const targetUrl = `https://${bucketName}.${endpoint}/${proxyPath}${qs ? '?' + qs : ''}`;
 
     // Forward AWS signature headers from the client
     const headers = {};
@@ -54,7 +56,7 @@ export default async function handler(req, res) {
       }
     }
     // Set correct Host for B2
-    headers['Host'] = 'coopmaza-documentos.s3.us-east-005.backblazeb2.com';
+    headers['Host'] = `${bucketName}.${endpoint}`;
 
     const fetchOptions = { method: req.method, headers };
 
