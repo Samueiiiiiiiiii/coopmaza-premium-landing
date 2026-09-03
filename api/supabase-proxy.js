@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     const targetUrl = `https://lcajcnprlvbnqelamqnj.supabase.co/${proxyPath}${qs ? '?' + qs : ''}`;
 
     // Use the service role key from environment variables
-    const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjYWpjbnBybHZibnFlbGFtcW5qIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTEwMjg1MiwiZXhwIjoyMDk0Njc4ODUyfQ.G5i9XcC-_kE203rFM3_yXbqWKkCpB5WR4oqzZdNWr68';
+    const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.VITE_SUPABASE_ANON_KEY || '';
 
     if (!supabaseKey) {
       return res.status(500).json({ error: 'SUPABASE_SERVICE_KEY not configured' });

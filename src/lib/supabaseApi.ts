@@ -2,7 +2,7 @@
 // Uses the secret key which bypasses RLS policies
 
 const SUPABASE_URL = 'https://lcajcnprlvbnqelamqnj.supabase.co';
-const SECRET_KEY = import.meta.env.VITE_SUPABASE_SERVICE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjYWpjbnBybHZibnFlbGFtcW5qIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTEwMjg1MiwiZXhwIjoyMDk0Njc4ODUyfQ.G5i9XcC-_kE203rFM3_yXbqWKkCpB5WR4oqzZdNWr68';
+const SECRET_KEY = import.meta.env.VITE_SUPABASE_SERVICE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
 const adminHeaders = {
   'apikey': SECRET_KEY,

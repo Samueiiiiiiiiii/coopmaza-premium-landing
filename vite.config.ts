@@ -2,11 +2,18 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
+import path from 'path';
+
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/digital/',
+  base: '/',
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
   build: {
-    outDir: 'dist/digital',
+    outDir: 'dist',
   },
   plugins: [
     react(),
@@ -20,7 +27,7 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api\/supabase/, ''),
         configure: (proxy, _options) => {
           proxy.on('proxyReq', (proxyReq, _req, _res) => {
-            const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjYWpjbnBybHZibnFlbGFtcW5qIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTEwMjg1MiwiZXhwIjoyMDk0Njc4ODUyfQ.G5i9XcC-_kE203rFM3_yXbqWKkCpB5WR4oqzZdNWr68';
+            const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.VITE_SUPABASE_ANON_KEY || '';
             proxyReq.setHeader('apikey', supabaseKey);
             proxyReq.setHeader('Authorization', `Bearer ${supabaseKey}`);
             
