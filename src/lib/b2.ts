@@ -14,9 +14,46 @@ export const getSignedUrl = async (url: string) => {
     aws: { signQuery: true }
   });
   
-  // Rewrite the URL to use our Vite proxy to bypass CORS
-  // Use absolute URL because @react-pdf/renderer might need it
+  // Rewrite the URL to use our Vercel proxy to bypass CORS
   const parsed = new URL(signedReq.url);
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
   return `${baseUrl}/api/b2${parsed.pathname}${parsed.search}`;
+};
+
+export const uploadToB2Client = async (fileBase64: string, contentType: string, fileName: string) => {
+  if (!fileBase64) return null;
+  
+  const bucket = import.meta.env.VITE_BACKBLAZE_BUCKET || import.meta.env.BACKBLAZE_BUCKET || 'coopmaza-docs';
+  const endpoint = import.meta.env.VITE_BACKBLAZE_ENDPOINT || import.meta.env.BACKBLAZE_ENDPOINT || 's3.us-east-005.backblazeb2.com'; 
+  
+  const key = `solicitudes/${crypto.randomUUID()}-${fileName}`;
+  const targetUrl = `https://${bucket}.${endpoint}/${key}`;
+
+  const base64Data = fileBase64.includes(',') ? fileBase64.split(',')[1] : fileBase64;
+  const binaryString = atob(base64Data);
+  const bytes = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+
+  const signedReq = await aws.sign(targetUrl, {
+    method: 'PUT',
+    headers: { 'Content-Type': contentType },
+    body: bytes,
+  });
+
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+  const uploadUrl = `${baseUrl}/api/b2/${key}`;
+
+  const res = await fetch(uploadUrl, {
+    method: 'PUT',
+    headers: signedReq.headers,
+    body: bytes,
+  });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => '');
+    throw new Error(`Error subiendo archivo a Backblaze (${res.status}): ${errText}`);
+  }
+  return targetUrl;
 };

@@ -11,49 +11,9 @@ import { Button } from '../components/ui/Button';
 import { Upload, X, CheckCircle2, Send } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { supabase } from '../lib/supabase';
-import { AwsClient } from 'aws4fetch';
+import { uploadToB2Client } from '../lib/b2';
 import { pdf } from '@react-pdf/renderer';
 import { SolicitudPDF } from '../components/pdf/SolicitudPDF';
-
-// Upload function directly from client to Backblaze
-const uploadToB2Client = async (fileBase64: string, contentType: string, fileName: string) => {
-  if (!fileBase64) return null;
-  
-  const aws = new AwsClient({
-    accessKeyId: import.meta.env.VITE_BACKBLAZE_KEY_ID || import.meta.env.BACKBLAZE_KEY_ID || '005683eb57bbbfd0000000001',
-    secretAccessKey: import.meta.env.VITE_BACKBLAZE_APP_KEY || import.meta.env.BACKBLAZE_APP_KEY || 'K005iM2QhB29rWWGdDn317kZQh69GiQ',
-    service: "s3",
-    region: "us-east-005"
-  });
-
-  const bucket = import.meta.env.VITE_BACKBLAZE_BUCKET || import.meta.env.BACKBLAZE_BUCKET || 'coopmaza-docs';
-  const endpoint = import.meta.env.VITE_BACKBLAZE_ENDPOINT || import.meta.env.BACKBLAZE_ENDPOINT || 's3.us-east-005.backblazeb2.com'; 
-  
-  const key = `solicitudes/${crypto.randomUUID()}-${fileName}`;
-  const url = `https://${bucket}.${endpoint}/${key}`;
-
-  const base64Data = fileBase64.includes(',') ? fileBase64.split(',')[1] : fileBase64;
-  const binaryString = atob(base64Data);
-  const bytes = new Uint8Array(binaryString.length);
-  for (let i = 0; i < binaryString.length; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
-  }
-
-  const signedReq = await aws.sign(url, {
-    method: 'PUT',
-    headers: { 'Content-Type': contentType },
-    body: bytes,
-  });
-
-  const res = await fetch(url, {
-    method: 'PUT',
-    headers: signedReq.headers,
-    body: bytes,
-  });
-
-  if (!res.ok) throw new Error('Error subiendo imagen a Backblaze');
-  return url;
-};
 
 const fileToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
